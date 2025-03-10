@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urenregistratie</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <h1>Urenregistratie</h1>
+    <form id="urenForm">
+        <label>Datum: <input type="date" id="datum" required></label><br>
+        <label>Starttijd: <input type="time" id="starttijd" required></label><br>
+        <label>Eindtijd: <input type="time" id="eindtijd" required></label><br>
+        <label>Beschrijving: <input type="text" id="beschrijving"></label><br>
+        <button type="submit">Toevoegen</button>
+    </form>
+    
+    <h2>Gewerkte uren</h2>
+    <ul id="urenLijst"></ul>
+    
+    <script>
+        document.getElementById("urenForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let datum = document.getElementById("datum").value;
+            let starttijd = document.getElementById("starttijd").value;
+            let eindtijd = document.getElementById("eindtijd").value;
+            let beschrijving = document.getElementById("beschrijving").value;
+            
+            let item = { datum, starttijd, eindtijd, beschrijving };
+            let uren = JSON.parse(localStorage.getItem("uren")) || [];
+            uren.push(item);
+            localStorage.setItem("uren", JSON.stringify(uren));
+            
+            toonUren();
+        });
+        
+        function toonUren() {
+            let uren = JSON.parse(localStorage.getItem("uren")) || [];
+            let lijst = document.getElementById("urenLijst");
+            lijst.innerHTML = "";
+            uren.forEach((item, index) => {
+                let li = document.createElement("li");
+                li.textContent = `${item.datum}: ${item.starttijd} - ${item.eindtijd} (${item.beschrijving})`;
+                lijst.appendChild(li);
+            });
+        }
+        
+        toonUren();
+    </script>
+</body>
+</html>
